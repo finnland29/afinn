@@ -10,20 +10,35 @@ function submitForm(name, hometown) {
   var h = document.getElementById("hometown");
   //saveLocal(name,hometown);
   saveRemote(name,hometown);
-  guestlist.innerHTML += "<li>" = name + ". " + hometown + "</li>";
+  guestlist.innerHTML += "<li>" + name + ". " + hometown + "</li>";
   n.value = "";
   h.value = "";
   n.focus();
   return false;
 }
 
-function saveLocal() {
+function saveLocal(name, hometown) {
   var currentguestlist = localStorage.getItem("guestlist");
   localStorage.setItem("guestlist", currentguestlist + "<li>" + name + ". " + hometown + "</li>");
 }
 
 function saveRemote(name, hometown) {
   $.get("save.php",{"name":name,"hometown":hometown});
+}
+
+function loadRemote() {
+  $.get("load.php",{},function(data) { 
+    data = JSON.parse(data);
+    console.log(data);
+    console.log("row by row:");
+    var html = "";
+    for (var i in data) {
+      console.log(data[i]);
+      if (data[i])
+        html += "<li>" + data[i] + "</li>";
+    }
+    $("#guestlist").html(html);
+  });
 }
 
 
@@ -38,7 +53,7 @@ function clearStorageGB() {
 function checkStorageGB() {
   var guestlist = document.getElementById("guestlist");
   var currentguestlist = localStorage.getItem("guestlist");
-  guestlistlist.innerHTML = currentguestlist;
+  guestlist.innerHTML = currentguestlist;
 }
 
 function clearStorage() {
